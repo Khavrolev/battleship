@@ -1,25 +1,16 @@
 import classNames from "classnames";
-import { useState } from "react";
+import { FC } from "react";
 import { BOARD_SIZE } from "../../utils/constants";
 import CellStatus from "../../utils/enums";
-import BoardState from "../../utils/interfaces";
+import { BoardState, ShipsPosition } from "../../utils/interfaces";
 import classes from "./Board.module.css";
 
-const Board = () => {
-  const mockState = {
-    "0-0": CellStatus.Alive,
-    "0-1": CellStatus.Alive,
-    "0-2": CellStatus.Alive,
-    "1-2": CellStatus.Alive,
-    "4-0": CellStatus.Alive,
-    "5-0": CellStatus.Alive,
-    "6-0": CellStatus.Alive,
-    "7-0": CellStatus.Alive,
-    "5-5": CellStatus.Alive,
-    "7-7": CellStatus.Alive,
-  };
-  const [state] = useState<BoardState>(mockState);
+interface BoardProps {
+  ships: ShipsPosition;
+  shots: BoardState;
+}
 
+const Board: FC<BoardProps> = ({ ships, shots }) => {
   const getBoard = () => {
     const board = [];
     for (let i = 0; i < BOARD_SIZE.rows; i += 1) {
@@ -32,9 +23,9 @@ const Board = () => {
               height: `${BOARD_SIZE.cellSize}px`,
             }}
             className={classNames(classes.board__cell, {
-              [classes.cell__missed]: state[`${i}-${j}`] === CellStatus.Missed,
-              [classes.cell__alive]: state[`${i}-${j}`] === CellStatus.Alive,
-              [classes.cell__dead]: state[`${i}-${j}`] === CellStatus.Dead,
+              [classes.cell__alive]: ships[`${i}-${j}`] && !shots[`${i}-${j}`],
+              [classes.cell__dead]: shots[`${i}-${j}`] === CellStatus.Dead,
+              [classes.cell__missed]: shots[`${i}-${j}`] === CellStatus.Missed,
             })}
             data-row={i}
             data-column={j}

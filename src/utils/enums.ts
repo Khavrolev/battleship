@@ -1,7 +1,5 @@
 enum CellStatus {
-  Empty,
-  Missed,
-  Alive,
+  Missed = 1,
   Dead,
 }
 

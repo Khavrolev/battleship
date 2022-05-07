@@ -8,16 +8,12 @@
   border: 1px solid #808080;
 }
 
-.cell__empty {
-  background-color: #faebd7;
+.cell__alive {
+  background-color: #008000;
 }
 
 .cell__missed {
-  background-color: #ffd700;
-}
-
-.cell__alive {
-  background-color: #008000;
+  background-color: #7fffd4;
 }
 
 .cell__dead {

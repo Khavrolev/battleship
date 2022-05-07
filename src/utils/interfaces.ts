@@ -1,7 +1,14 @@
 import CellStatus from "./enums";
 
-interface BoardState {
+export interface BoardState {
   [key: string]: CellStatus;
 }
 
-export default BoardState;
+export interface ShipsPosition {
+  [key: string]: boolean;
+}
+
+export interface Coordinates {
+  row: number;
+  column: number;
+}
