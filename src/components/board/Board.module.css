@@ -1,0 +1,25 @@
+.board {
+  display: grid;
+  width: fit-content;
+  margin: 0 auto;
+}
+
+.board__cell {
+  border: 1px solid #808080;
+}
+
+.cell__empty {
+  background-color: #faebd7;
+}
+
+.cell__missed {
+  background-color: #ffd700;
+}
+
+.cell__alive {
+  background-color: #008000;
+}
+
+.cell__dead {
+  background-color: #ff0000;
+}
