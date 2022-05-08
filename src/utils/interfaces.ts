@@ -1,4 +1,4 @@
-import CellStatus from "./enums";
+import { CellStatus } from "./enums";
 
 export interface BoardState {
   [key: string]: CellStatus;

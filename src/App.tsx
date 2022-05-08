@@ -2,9 +2,19 @@ import classNames from "classnames";
 import classes from "./App.module.css";
 import Board from "./components/board/Board";
 import useBattle from "./hooks/useBattle";
+import { isGameNotStarted, isGameOver } from "./utils/gameStatus";
+import getShipsOnBoard from "./utils/getShipsOnBoard";
 
 const App = () => {
-  const { run, setRun, ships, shots, setShots, isGameOver } = useBattle();
+  const { run, setRun, ships, setShips, shots, setShots } = useBattle();
+
+  const gameNotStarted = isGameNotStarted(shots);
+  const gameOver = isGameOver(ships, shots);
+
+  const handleReset = () => {
+    setShots({});
+    setShips(getShipsOnBoard());
+  };
 
   return (
     <div className={classes.wrapper}>
@@ -15,14 +25,14 @@ const App = () => {
         <button
           className={classes.button}
           onClick={() => setRun(!run)}
-          disabled={isGameOver()}
+          disabled={gameOver}
         >
           {run ? "Stop" : "Start"}
         </button>
         <button
           className={classes.button}
-          onClick={() => setShots({})}
-          disabled={!isGameOver()}
+          onClick={handleReset}
+          disabled={!gameNotStarted && !gameOver}
         >
           Reset
         </button>
@@ -30,10 +40,10 @@ const App = () => {
       <div className={classes.wrapper__counter}>
         <div
           className={classNames(classes.counter, {
-            [classes.counter_gameover]: isGameOver(),
+            [classes.counter_gameover]: gameOver,
           })}
         >{`Shot #${Object.keys(shots).length} ${
-          isGameOver() ? "Game Over!" : ""
+          gameOver ? "Game Over!" : ""
         }`}</div>
       </div>
       <div className={classes.wrapper__board}>

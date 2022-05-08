@@ -1,6 +1,10 @@
-enum CellStatus {
+export enum CellStatus {
   Missed = 1,
   Dead,
 }
 
-export default CellStatus;
+export enum ShipType {
+  LShaped = 1,
+  IShaped,
+  DotShaped,
+}

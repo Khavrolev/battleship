@@ -13,7 +13,7 @@ export const parseCoordinates = (cell: string): Coordinates => {
   return { row: +cellArray[0], column: +cellArray[1] };
 };
 
-export const packCoordinates = (coordinates: Coordinates) =>
+const packCoordinates = (coordinates: Coordinates) =>
   `${coordinates.row}-${coordinates.column}`;
 
 export const getNewCoordinates = (shots: BoardState) => {

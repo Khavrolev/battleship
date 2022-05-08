@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { FC } from "react";
 import { BOARD_SIZE } from "../../utils/constants";
-import CellStatus from "../../utils/enums";
+import { CellStatus } from "../../utils/enums";
 import { BoardState, ShipsPosition } from "../../utils/interfaces";
 import classes from "./Board.module.css";
 
