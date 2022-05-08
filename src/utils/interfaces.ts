@@ -12,3 +12,8 @@ export interface Coordinates {
   row: number;
   column: number;
 }
+
+export interface ShipLimits {
+  row: { min: number; max: number };
+  column: { min: number; max: number };
+}

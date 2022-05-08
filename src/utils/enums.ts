@@ -4,7 +4,7 @@ export enum CellStatus {
 }
 
 export enum ShipType {
-  LShaped = 1,
-  IShaped,
-  DotShaped,
+  LShaped = "LShaped",
+  IShaped = "IShaped",
+  DotShaped = "DotShaped",
 }

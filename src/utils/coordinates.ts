@@ -1,28 +1,25 @@
-import { BOARD_SIZE } from "./constants";
-import { BoardState, Coordinates } from "./interfaces";
+import { BOARD_LIMITS } from "./constants";
+import { BoardState, Coordinates, ShipLimits } from "./interfaces";
 
-const getRandomInt = (max: number) => Math.floor(Math.random() * max);
+export const getRandomInt = (min: number, max: number) =>
+  Math.floor(Math.random() * (Math.floor(max) - Math.ceil(min))) +
+  Math.ceil(min);
 
-export const parseCoordinates = (cell: string): Coordinates => {
-  const cellArray = cell.split("-");
-
-  if (cellArray.length !== 2 || cellArray.includes("")) {
-    throw new Error(`Wrong input`);
-  }
-
-  return { row: +cellArray[0], column: +cellArray[1] };
-};
-
-const packCoordinates = (coordinates: Coordinates) =>
+export const packCoordinates = (coordinates: Coordinates) =>
   `${coordinates.row}-${coordinates.column}`;
+
+export const getRandomCoordinates = (limits: ShipLimits) => {
+  return {
+    row: getRandomInt(limits.row.min, limits.row.max),
+    column: getRandomInt(limits.column.min, limits.column.max),
+  };
+};
 
 export const getNewCoordinates = (shots: BoardState) => {
   let coordinates = "";
 
   do {
-    const row = getRandomInt(BOARD_SIZE.rows);
-    const column = getRandomInt(BOARD_SIZE.columns);
-    coordinates = packCoordinates({ row, column });
+    coordinates = packCoordinates(getRandomCoordinates(BOARD_LIMITS));
   } while (shots[coordinates]);
 
   return coordinates;

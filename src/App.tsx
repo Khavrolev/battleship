@@ -13,7 +13,7 @@ const App = () => {
 
   const handleReset = () => {
     setShots({});
-    setShips(getShipsOnBoard());
+    setShips(() => getShipsOnBoard());
   };
 
   return (

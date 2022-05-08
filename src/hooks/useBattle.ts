@@ -8,7 +8,7 @@ import useInterval from "./useInterval";
 
 const useBattle = () => {
   const [run, setRun] = useState(false);
-  const [ships, setShips] = useState<ShipsPosition>(getShipsOnBoard());
+  const [ships, setShips] = useState<ShipsPosition>(() => getShipsOnBoard());
   const [shots, setShots] = useState<BoardState>({});
 
   useInterval(
