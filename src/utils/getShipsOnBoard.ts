@@ -35,10 +35,25 @@ const getNeighbours = (cell: Coordinates) => {
   ];
 };
 
+const checkShipSize = (type: ShipType, vertical: boolean) => {
+  if (
+    (vertical &&
+      (SHIPS_ON_BOARD[type].longSize > BOARD_SIZE.rows ||
+        SHIPS_ON_BOARD[type].shortSize > BOARD_SIZE.columns)) ||
+    (!vertical &&
+      (SHIPS_ON_BOARD[type].longSize > BOARD_SIZE.columns ||
+        SHIPS_ON_BOARD[type].shortSize > BOARD_SIZE.rows))
+  ) {
+    throw new Error("The size of ship is larger than board");
+  }
+};
+
 const getLShipOnBoard = (): BoardData => {
   const vertical = getRandomBoolean();
   const incrementShortSide = getRandomBoolean();
   const incrementLongSide = getRandomBoolean();
+  checkShipSize(ShipType.LShaped, !vertical);
+
   const limits: ShipLimits = { ...BOARD_LIMITS };
 
   if (vertical) {
@@ -95,7 +110,10 @@ const getLShipOnBoard = (): BoardData => {
   const result: BoardData = {
     occupied: {},
     unacceptable: [],
-    weight: SHIPS_ON_BOARD[ShipType.LShaped].weight,
+    weight:
+      SHIPS_ON_BOARD[ShipType.LShaped].shortSize +
+      SHIPS_ON_BOARD[ShipType.LShaped].longSize -
+      1,
   };
   for (let i = 0; i < SHIPS_ON_BOARD[ShipType.LShaped].shortSize; i += 1) {
     const { row, column } = coordinates;
@@ -146,21 +164,22 @@ const getLShipOnBoard = (): BoardData => {
   return result;
 };
 
-const getIShipOnBoard = (): BoardData => {
+const getIorDotShipOnBoard = (type: ShipType): BoardData => {
   const vertical = getRandomBoolean();
+  checkShipSize(type, vertical);
 
   const limits: ShipLimits = {
     row: {
       min: 0,
       max: vertical
-        ? BOARD_SIZE.rows - SHIPS_ON_BOARD[ShipType.IShaped].longSize
-        : BOARD_SIZE.rows - SHIPS_ON_BOARD[ShipType.IShaped].shortSize,
+        ? BOARD_SIZE.rows - SHIPS_ON_BOARD[type].longSize
+        : BOARD_SIZE.rows - SHIPS_ON_BOARD[type].shortSize,
     },
     column: {
       min: 0,
       max: vertical
-        ? BOARD_SIZE.columns - SHIPS_ON_BOARD[ShipType.IShaped].shortSize
-        : BOARD_SIZE.columns - SHIPS_ON_BOARD[ShipType.IShaped].longSize,
+        ? BOARD_SIZE.columns - SHIPS_ON_BOARD[type].shortSize
+        : BOARD_SIZE.columns - SHIPS_ON_BOARD[type].longSize,
     },
   };
 
@@ -169,20 +188,24 @@ const getIShipOnBoard = (): BoardData => {
   const result: BoardData = {
     occupied: {},
     unacceptable: [],
-    weight: SHIPS_ON_BOARD[ShipType.IShaped].weight,
+    weight: SHIPS_ON_BOARD[type].shortSize * SHIPS_ON_BOARD[type].longSize,
   };
-  for (let i = 0; i < SHIPS_ON_BOARD[ShipType.IShaped].longSize; i += 1) {
-    const { row, column } = coordinates;
+  for (let i = 0; i < SHIPS_ON_BOARD[type].longSize; i += 1) {
+    for (let j = 0; j < SHIPS_ON_BOARD[type].shortSize; j += 1) {
+      const { row, column } = coordinates;
 
-    const cell: Coordinates = { row, column };
-    if (vertical) {
-      cell.row = row + i;
-    } else {
-      cell.column = column + i;
+      const cell: Coordinates = { row, column };
+      if (vertical) {
+        cell.row = row + i;
+        cell.column = column + j;
+      } else {
+        cell.row = row + j;
+        cell.column = column + i;
+      }
+
+      result.occupied[packCoordinates(cell)] = true;
+      result.unacceptable = [...result.unacceptable, ...getNeighbours(cell)];
     }
-
-    result.occupied[packCoordinates(cell)] = true;
-    result.unacceptable = [...result.unacceptable, ...getNeighbours(cell)];
   }
 
   result.unacceptable = [
@@ -194,25 +217,14 @@ const getIShipOnBoard = (): BoardData => {
   return result;
 };
 
-const getDotShipOnBoard = (): BoardData => {
-  const cell = getRandomCoordinates(BOARD_LIMITS);
-  const result: BoardData = {
-    occupied: { [packCoordinates(cell)]: true },
-    unacceptable: [...getNeighbours(cell)],
-    weight: SHIPS_ON_BOARD[ShipType.DotShaped].weight,
-  };
-
-  return result;
-};
-
 const getOneShipOnBoard = (type: string): BoardData => {
   switch (type) {
     case ShipType.LShaped:
       return getLShipOnBoard();
     case ShipType.IShaped:
-      return getIShipOnBoard();
+      return getIorDotShipOnBoard(ShipType.IShaped);
     case ShipType.DotShaped:
-      return getDotShipOnBoard();
+      return getIorDotShipOnBoard(ShipType.DotShaped);
     default:
       throw new Error("Wrong ship type");
   }
@@ -230,33 +242,40 @@ const getShipsOnBoard = (): ShipsPosition => {
       return {};
     }
 
-    const ships = types.reduce(
-      (acc, type) => {
-        let shipsOnBoard: BoardData = { ...acc };
-        for (let i = 0; i < SHIPS_ON_BOARD[type].amount; i += 1) {
-          const ship = getOneShipOnBoard(type);
-          shipsOnBoard = {
-            occupied: { ...shipsOnBoard.occupied, ...ship.occupied },
-            unacceptable: [...shipsOnBoard.unacceptable, ...ship.unacceptable],
-            weight: shipsOnBoard.weight + ship.weight,
-          };
-        }
+    try {
+      const ships = types.reduce(
+        (acc, type) => {
+          let shipsOnBoard: BoardData = { ...acc };
+          for (let i = 0; i < SHIPS_ON_BOARD[type].amount; i += 1) {
+            const ship = getOneShipOnBoard(type);
+            shipsOnBoard = {
+              occupied: { ...shipsOnBoard.occupied, ...ship.occupied },
+              unacceptable: [
+                ...shipsOnBoard.unacceptable,
+                ...ship.unacceptable,
+              ],
+              weight: shipsOnBoard.weight + ship.weight,
+            };
+          }
 
-        return shipsOnBoard;
-      },
-      { occupied: {}, unacceptable: [], weight: 0 } as BoardData,
-    );
+          return shipsOnBoard;
+        },
+        { occupied: {}, unacceptable: [], weight: 0 } as BoardData,
+      );
 
-    const filtredUnacceptable = [...new Set(ships.unacceptable)].filter(
-      (unacceptable) => ships.occupied[unacceptable],
-    );
+      const filtredUnacceptable = [...new Set(ships.unacceptable)].filter(
+        (unacceptable) => ships.occupied[unacceptable],
+      );
 
-    if (
-      filtredUnacceptable.length === 0 &&
-      Object.keys(ships.occupied).length === ships.weight
-    ) {
-      result = { ...ships.occupied };
-      generation.finished = true;
+      if (
+        filtredUnacceptable.length === 0 &&
+        Object.keys(ships.occupied).length === ships.weight
+      ) {
+        result = { ...ships.occupied };
+        generation.finished = true;
+      }
+    } catch (error) {
+      continue;
     }
   }
 
