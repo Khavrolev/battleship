@@ -1,12 +1,18 @@
 import {
   BOARD_LIMITS,
   BOARD_SIZE,
+  MAX_ATTEMPTS_TO_INIT,
   SHIPS_ON_BOARD,
   SHIPS_SIZE,
 } from "./constants";
 import { getRandomCoordinates, packCoordinates } from "./coordinates";
 import { ShipType } from "./enums";
 import { Coordinates, ShipLimits, ShipsPosition } from "./interfaces";
+
+interface BoardData {
+  occupied: ShipsPosition;
+  unacceptable: string[];
+}
 
 // interface LShipConfig {
 //   vertical: boolean;
@@ -28,7 +34,25 @@ import { Coordinates, ShipLimits, ShipsPosition } from "./interfaces";
 // };
 const getRandomBoolean = () => Math.random() < 0.5;
 
-// const getLShipOnBoard = (): ShipsPosition => {
+const getNeighbours = (cell: Coordinates) => {
+  const topRow = cell.row - 1;
+  const bottomRow = cell.row + 1;
+  const leftColumn = cell.column - 1;
+  const rightColumn = cell.column + 1;
+
+  return [
+    `${topRow}-${leftColumn}`,
+    `${topRow}-${cell.column}`,
+    `${topRow}-${rightColumn}`,
+    `${cell.row}-${leftColumn}`,
+    `${cell.row}-${rightColumn}`,
+    `${bottomRow}-${leftColumn}`,
+    `${bottomRow}-${cell.column}`,
+    `${bottomRow}-${rightColumn}`,
+  ];
+};
+
+// const getLShipOnBoard = () :BoardData => {
 //   const config: LShipConfig = {
 //     vertical: getRandomBoolean(),
 //     rightToLine: getRandomBoolean(),
@@ -47,7 +71,7 @@ const getRandomBoolean = () => Math.random() < 0.5;
 //   }
 // };
 
-const getIShipOnBoard = (): ShipsPosition => {
+const getIShipOnBoard = (): BoardData => {
   const vertical = getRandomBoolean();
 
   const limits: ShipLimits = {
@@ -65,32 +89,43 @@ const getIShipOnBoard = (): ShipsPosition => {
     },
   };
 
-  const coordinates: Coordinates = getRandomCoordinates(limits);
+  const coordinates = getRandomCoordinates(limits);
 
-  const ship: ShipsPosition = {};
+  const result: BoardData = { occupied: {}, unacceptable: [] };
   for (let i = 0; i < SHIPS_SIZE[ShipType.IShaped].longSize; i += 1) {
     const { row, column } = coordinates;
 
-    let key;
+    let cell: Coordinates;
     if (vertical) {
-      key = packCoordinates({ row: row + i, column });
+      cell = { row: row + i, column };
     } else {
-      key = packCoordinates({ row, column: column + i });
+      cell = { row, column: column + i };
     }
 
-    ship[key] = true;
+    result.occupied[packCoordinates(cell)] = true;
+    result.unacceptable = [...result.unacceptable, ...getNeighbours(cell)];
   }
 
-  return ship;
+  result.unacceptable = [
+    ...result.unacceptable.filter(
+      (unacceptable) => !result.occupied[unacceptable],
+    ),
+  ];
+
+  return result;
 };
 
-const getDotShipOnBoard = (): ShipsPosition => {
-  const packedCoordinates = packCoordinates(getRandomCoordinates(BOARD_LIMITS));
+const getDotShipOnBoard = (): BoardData => {
+  const cell = getRandomCoordinates(BOARD_LIMITS);
+  const result: BoardData = {
+    occupied: { [packCoordinates(cell)]: true },
+    unacceptable: [...getNeighbours(cell)],
+  };
 
-  return { [packedCoordinates]: true };
+  return result;
 };
 
-const getOneShipOnBoard = (type: string): ShipsPosition => {
+const getOneShipOnBoard = (type: string) => {
   switch (type) {
     // case ShipType.LShaped:
     //   return getLShipOnBoard();
@@ -105,18 +140,51 @@ const getOneShipOnBoard = (type: string): ShipsPosition => {
 
 const getShipsOnBoard = (): ShipsPosition => {
   const types = Object.keys(SHIPS_ON_BOARD);
+  const generation = { finished: false, counter: 0 };
+  let result: ShipsPosition = {};
 
-  const ships = types.reduce((acc, type) => {
-    let shipsOfThisType: ShipsPosition = {};
-    for (let i = 0; i < SHIPS_ON_BOARD[type]; i += 1) {
-      const ship = getOneShipOnBoard(type);
-      shipsOfThisType = { ...shipsOfThisType, ...ship };
+  while (!generation.finished) {
+    generation.counter += 1;
+
+    if (generation.counter === MAX_ATTEMPTS_TO_INIT) {
+      return {};
     }
 
-    return { ...acc, ...shipsOfThisType };
-  }, {});
+    const ships = types.reduce(
+      (acc, type) => {
+        let shipsOfThisType: BoardData = { occupied: {}, unacceptable: [] };
+        for (let i = 0; i < SHIPS_ON_BOARD[type]; i += 1) {
+          const ship = getOneShipOnBoard(type);
+          shipsOfThisType = {
+            occupied: { ...shipsOfThisType.occupied, ...ship.occupied },
+            unacceptable: [
+              ...shipsOfThisType.unacceptable,
+              ...ship.unacceptable,
+            ],
+          };
+        }
 
-  return ships;
+        return {
+          occupied: { ...acc.occupied, ...shipsOfThisType.occupied },
+          unacceptable: [...acc.unacceptable, ...shipsOfThisType.unacceptable],
+        };
+      },
+      { occupied: {}, unacceptable: [] } as BoardData,
+    );
+
+    const filtredUnacceptable = [...new Set(ships.unacceptable)].filter(
+      (unacceptable) => ships.occupied[unacceptable],
+    );
+    console.log([...new Set(ships.unacceptable)]);
+    console.log(filtredUnacceptable);
+    console.log(ships.occupied);
+    if (filtredUnacceptable.length === 0) {
+      result = { ...ships.occupied };
+      generation.finished = true;
+    }
+  }
+
+  return result;
 };
 
 export default getShipsOnBoard;

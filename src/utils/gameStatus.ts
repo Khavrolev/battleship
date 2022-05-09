@@ -9,6 +9,9 @@ const isShipsSunk = (ships: ShipsPosition, shots: BoardState) =>
   Object.keys(ships).length ===
   Object.keys(shots).filter((shot) => shots[shot] === CellStatus.Dead).length;
 
+export const isGameCannotBeStarted = (ships: ShipsPosition) =>
+  Object.keys(ships).length === 0;
+
 export const isGameOver = (ships: ShipsPosition, shots: BoardState) =>
   isNoShot(shots) || isShipsSunk(ships, shots);
 

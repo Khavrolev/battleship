@@ -2,14 +2,27 @@ import classNames from "classnames";
 import classes from "./App.module.css";
 import Board from "./components/board/Board";
 import useBattle from "./hooks/useBattle";
-import { isGameNotStarted, isGameOver } from "./utils/gameStatus";
+import {
+  isGameCannotBeStarted,
+  isGameNotStarted,
+  isGameOver,
+} from "./utils/gameStatus";
 import getShipsOnBoard from "./utils/getShipsOnBoard";
 
 const App = () => {
   const { run, setRun, ships, setShips, shots, setShots } = useBattle();
 
+  const gameCannotBeStarted = isGameCannotBeStarted(ships);
   const gameNotStarted = isGameNotStarted(shots);
   const gameOver = isGameOver(ships, shots);
+
+  const getTitle = () => {
+    if (gameCannotBeStarted) {
+      return "Game cannot be started with this size of board and ships quantity";
+    }
+
+    return `Shot #${Object.keys(shots).length} ${gameOver ? "Game Over!" : ""}`;
+  };
 
   const handleReset = () => {
     setShots({});
@@ -42,9 +55,9 @@ const App = () => {
           className={classNames(classes.counter, {
             [classes.counter_gameover]: gameOver,
           })}
-        >{`Shot #${Object.keys(shots).length} ${
-          gameOver ? "Game Over!" : ""
-        }`}</div>
+        >
+          {getTitle()}
+        </div>
       </div>
       <div className={classes.wrapper__board}>
         <Board ships={ships} shots={shots} />
