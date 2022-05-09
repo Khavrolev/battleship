@@ -15,18 +15,6 @@ interface BoardData {
   weight: number;
 }
 
-// const mockShips = {
-//   "0-0": true,
-//   "0-1": true,
-//   "0-2": true,
-//   "1-2": true,
-//   "4-0": true,
-//   "5-0": true,
-//   "6-0": true,
-//   "7-0": true,
-//   "5-5": true,
-//   "7-7": true,
-// };
 const getRandomBoolean = () => Math.random() < 0.5;
 
 const getNeighbours = (cell: Coordinates) => {
@@ -49,12 +37,12 @@ const getNeighbours = (cell: Coordinates) => {
 
 const getLShipOnBoard = (): BoardData => {
   const vertical = getRandomBoolean();
-  const incrementShortlSide = getRandomBoolean();
+  const incrementShortSide = getRandomBoolean();
   const incrementLongSide = getRandomBoolean();
   const limits: ShipLimits = { ...BOARD_LIMITS };
 
   if (vertical) {
-    if (incrementShortlSide) {
+    if (incrementShortSide) {
       limits.row = {
         min: 0,
         max: BOARD_SIZE.rows - SHIPS_ON_BOARD[ShipType.LShaped].shortSize + 1,
@@ -88,7 +76,7 @@ const getLShipOnBoard = (): BoardData => {
         max: BOARD_SIZE.rows,
       };
     }
-    if (incrementShortlSide) {
+    if (incrementShortSide) {
       limits.column = {
         min: 0,
         max:
@@ -112,17 +100,17 @@ const getLShipOnBoard = (): BoardData => {
   for (let i = 0; i < SHIPS_ON_BOARD[ShipType.LShaped].shortSize; i += 1) {
     const { row, column } = coordinates;
 
-    let cell: Coordinates;
+    const cell: Coordinates = { row, column };
     if (vertical) {
-      if (incrementShortlSide) {
-        cell = { row: row + i, column };
+      if (incrementShortSide) {
+        cell.row = row + i;
       } else {
-        cell = { row: row - i, column };
+        cell.row = row - i;
       }
-    } else if (incrementShortlSide) {
-      cell = { row, column: column + i };
+    } else if (incrementShortSide) {
+      cell.column = column + i;
     } else {
-      cell = { row, column: column - i };
+      cell.column = column - i;
     }
 
     result.occupied[packCoordinates(cell)] = true;
@@ -132,17 +120,17 @@ const getLShipOnBoard = (): BoardData => {
   for (let i = 1; i < SHIPS_ON_BOARD[ShipType.LShaped].longSize; i += 1) {
     const { row, column } = coordinates;
 
-    let cell: Coordinates;
+    const cell: Coordinates = { row, column };
     if (vertical) {
       if (incrementLongSide) {
-        cell = { row, column: column + i };
+        cell.column = column + i;
       } else {
-        cell = { row, column: column - i };
+        cell.column = column - i;
       }
     } else if (incrementLongSide) {
-      cell = { row: row + i, column };
+      cell.row = row + i;
     } else {
-      cell = { row: row - i, column };
+      cell.row = row - i;
     }
 
     result.occupied[packCoordinates(cell)] = true;
@@ -186,11 +174,11 @@ const getIShipOnBoard = (): BoardData => {
   for (let i = 0; i < SHIPS_ON_BOARD[ShipType.IShaped].longSize; i += 1) {
     const { row, column } = coordinates;
 
-    let cell: Coordinates;
+    const cell: Coordinates = { row, column };
     if (vertical) {
-      cell = { row: row + i, column };
+      cell.row = row + i;
     } else {
-      cell = { row, column: column + i };
+      cell.column = column + i;
     }
 
     result.occupied[packCoordinates(cell)] = true;

@@ -1,12 +1,19 @@
 import { ShipType } from "./enums";
-import { ShipsConfig } from "./interfaces";
+import { ShipLimits } from "./interfaces";
+
+interface ShipsConfig {
+  amount: number;
+  longSize: number;
+  shortSize: number;
+  weight: number;
+}
 
 export const BOARD_SIZE = { rows: 10, columns: 10, cellSize: 30 };
 export const DELAY_TIMEOUT = 200;
 export const MAX_ATTEMPTS_TO_INIT = 1000;
 export const COORDINATES_SEPARATOR = "_";
 
-export const BOARD_LIMITS = {
+export const BOARD_LIMITS: ShipLimits = {
   row: { min: 0, max: BOARD_SIZE.rows },
   column: { min: 0, max: BOARD_SIZE.columns },
 };

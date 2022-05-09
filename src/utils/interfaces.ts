@@ -13,13 +13,6 @@ export interface Coordinates {
   column: number;
 }
 
-export interface ShipsConfig {
-  amount: number;
-  longSize: number;
-  shortSize: number;
-  weight: number;
-}
-
 export interface ShipLimits {
   row: { min: number; max: number };
   column: { min: number; max: number };

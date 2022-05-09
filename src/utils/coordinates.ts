@@ -5,7 +5,7 @@ export const getRandomInt = (min: number, max: number) =>
   Math.floor(Math.random() * (Math.floor(max) - Math.ceil(min))) +
   Math.ceil(min);
 
-export const getRandomCoordinates = (limits: ShipLimits) => {
+export const getRandomCoordinates = (limits: ShipLimits): Coordinates => {
   return {
     row: getRandomInt(limits.row.min, limits.row.max),
     column: getRandomInt(limits.column.min, limits.column.max),
