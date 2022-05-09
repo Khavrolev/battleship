@@ -60,47 +60,46 @@ const getLShipOnBoard = (): BoardData => {
     if (incrementShortSide) {
       limits.row = {
         min: 0,
-        max: BOARD_SIZE.rows - SHIPS_ON_BOARD[ShipType.LShaped].shortSize + 1,
+        max: BOARD_SIZE.rows - SHIPS_ON_BOARD[ShipType.LShaped].shortSize,
       };
     } else {
       limits.row = {
         min: SHIPS_ON_BOARD[ShipType.LShaped].shortSize - 1,
-        max: BOARD_SIZE.rows,
+        max: BOARD_SIZE.rows - 1,
       };
     }
     if (incrementLongSide) {
       limits.column = {
         min: 0,
-        max: BOARD_SIZE.columns - SHIPS_ON_BOARD[ShipType.LShaped].longSize + 1,
+        max: BOARD_SIZE.columns - SHIPS_ON_BOARD[ShipType.LShaped].longSize,
       };
     } else {
       limits.column = {
         min: SHIPS_ON_BOARD[ShipType.LShaped].longSize - 1,
-        max: BOARD_SIZE.columns,
+        max: BOARD_SIZE.columns - 1,
       };
     }
   } else {
     if (incrementLongSide) {
       limits.row = {
         min: 0,
-        max: BOARD_SIZE.rows - SHIPS_ON_BOARD[ShipType.LShaped].longSize + 1,
+        max: BOARD_SIZE.rows - SHIPS_ON_BOARD[ShipType.LShaped].longSize,
       };
     } else {
       limits.row = {
         min: SHIPS_ON_BOARD[ShipType.LShaped].longSize - 1,
-        max: BOARD_SIZE.rows,
+        max: BOARD_SIZE.rows - 1,
       };
     }
     if (incrementShortSide) {
       limits.column = {
         min: 0,
-        max:
-          BOARD_SIZE.columns - SHIPS_ON_BOARD[ShipType.LShaped].shortSize + 1,
+        max: BOARD_SIZE.columns - SHIPS_ON_BOARD[ShipType.LShaped].shortSize,
       };
     } else {
       limits.column = {
         min: SHIPS_ON_BOARD[ShipType.LShaped].shortSize - 1,
-        max: BOARD_SIZE.columns,
+        max: BOARD_SIZE.columns - 1,
       };
     }
   }

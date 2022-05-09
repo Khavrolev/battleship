@@ -13,8 +13,8 @@ export const MAX_ATTEMPTS_TO_INIT = 1000;
 export const COORDINATES_SEPARATOR = "_";
 
 export const BOARD_LIMITS: ShipLimits = {
-  row: { min: 0, max: BOARD_SIZE.rows },
-  column: { min: 0, max: BOARD_SIZE.columns },
+  row: { min: 0, max: BOARD_SIZE.rows - 1 },
+  column: { min: 0, max: BOARD_SIZE.columns - 1 },
 };
 
 export const SHIPS_ON_BOARD: { [key: string]: ShipsConfig } = {
