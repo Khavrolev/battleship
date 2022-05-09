@@ -1,46 +1,35 @@
-# Getting Started with Create React App
+# battleship test task
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Preferably develop following task in React with TypeScript. Make sure code is posted in github or bitbucket public repo with readme on how to run it.
 
-## Available Scripts
+1. Let’s create an onscreen grid of cells aligned within a square 10 by 10.
 
-In the project directory, you can run:
+2. Then we set up initial battle ships - one L shaped, one I shaped and two dot shaped. Initial battle ships cannot overlap.
 
-### `npm start`
+3. Start actual game play after any kind of user input which would simulate shots at random positions - any missed shot would indicate already hit area, any shot at any of initial ships would visually indicate that battle ship has sink (change of ship color would be fine enough).
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+4. Program must be able to tell that all ships have sunk and game is over.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+5. Battle ships must not touch one another so there is at least a single cell between them. Any battle ship rotation must be random.
+   Each ship must have outline color defining boundaries of a ship.
 
-### `npm test`
+6. Multi cell battle ships (I && L) must consist of 4 cells, so there is no ambiguity of L shapes that do not look like L and I shapes of more or less than 4 cells.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+7. Some tests examples would be a nice bonus but not mandatory
 
-### `npm run build`
+## How to run
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+npm install
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+npm run start
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- There is src/utils/constants.js, where you can change some parameters before starting game:
 
-### `npm run eject`
+  - BOARD_SIZE: numbers of rows and columns and cell size;
+  - DELAY_TIMEOUT: time interval between shots in ms;
+  - MAX_ATTEMPTS_TO_INIT: max number of attempts to find position of ships on board;
+  - SHIPS_ON_BOARD: amount of ships of each type, sizes of long and short sizes of ships. Technically short side can be larger than long size, game will work, but it's not good solution.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+- You can use [GitHub Pages](https://khavrolev.github.io/battleship/).
