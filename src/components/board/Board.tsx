@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import { FC } from "react";
-import { BOARD_SIZE } from "../../utils/constants";
+import { BOARD_SIZE, COORDINATES_SEPARATOR } from "../../utils/constants";
 import { CellStatus } from "../../utils/enums";
 import { BoardState, ShipsPosition } from "../../utils/interfaces";
 import classes from "./Board.module.css";
@@ -17,15 +17,19 @@ const Board: FC<BoardProps> = ({ ships, shots }) => {
       for (let j = 0; j < BOARD_SIZE.columns; j += 1) {
         board.push(
           <div
-            key={`${i}-${j}`}
+            key={`${i}${COORDINATES_SEPARATOR}${j}`}
             style={{
               width: `${BOARD_SIZE.cellSize}px`,
               height: `${BOARD_SIZE.cellSize}px`,
             }}
             className={classNames(classes.board__cell, {
-              [classes.cell__alive]: ships[`${i}-${j}`] && !shots[`${i}-${j}`],
-              [classes.cell__dead]: shots[`${i}-${j}`] === CellStatus.Dead,
-              [classes.cell__missed]: shots[`${i}-${j}`] === CellStatus.Missed,
+              [classes.board__cell_alive]:
+                ships[`${i}${COORDINATES_SEPARATOR}${j}`] &&
+                !shots[`${i}${COORDINATES_SEPARATOR}${j}`],
+              [classes.board__cell_dead]:
+                shots[`${i}${COORDINATES_SEPARATOR}${j}`] === CellStatus.Dead,
+              [classes.board__cell_missed]:
+                shots[`${i}${COORDINATES_SEPARATOR}${j}`] === CellStatus.Missed,
             })}
             data-row={i}
             data-column={j}

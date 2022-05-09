@@ -8,14 +8,14 @@
   border: 1px solid #808080;
 }
 
-.cell__alive {
+.board__cell_alive {
   background-color: #008000;
 }
 
-.cell__missed {
+.board__cell_missed {
   background-color: #7fffd4;
 }
 
-.cell__dead {
+.board__cell_dead {
   background-color: #ff0000;
 }

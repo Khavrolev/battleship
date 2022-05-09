@@ -18,7 +18,7 @@ const App = () => {
 
   const getTitle = () => {
     if (gameCannotBeStarted) {
-      return "Game cannot be started with this size of board and ships quantity";
+      return "Game cannot be started with this size of board and amount of ships";
     }
 
     return `Shot #${Object.keys(shots).length} ${gameOver ? "Game Over!" : ""}`;

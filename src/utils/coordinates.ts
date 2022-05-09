@@ -1,12 +1,9 @@
-import { BOARD_LIMITS } from "./constants";
+import { BOARD_LIMITS, COORDINATES_SEPARATOR } from "./constants";
 import { BoardState, Coordinates, ShipLimits } from "./interfaces";
 
 export const getRandomInt = (min: number, max: number) =>
   Math.floor(Math.random() * (Math.floor(max) - Math.ceil(min))) +
   Math.ceil(min);
-
-export const packCoordinates = (coordinates: Coordinates) =>
-  `${coordinates.row}-${coordinates.column}`;
 
 export const getRandomCoordinates = (limits: ShipLimits) => {
   return {
@@ -14,6 +11,9 @@ export const getRandomCoordinates = (limits: ShipLimits) => {
     column: getRandomInt(limits.column.min, limits.column.max),
   };
 };
+
+export const packCoordinates = (coordinates: Coordinates) =>
+  `${coordinates.row}${COORDINATES_SEPARATOR}${coordinates.column}`;
 
 export const getNewCoordinates = (shots: BoardState) => {
   let coordinates = "";
