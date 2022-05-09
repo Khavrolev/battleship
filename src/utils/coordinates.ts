@@ -1,7 +1,7 @@
 import { BOARD_LIMITS, COORDINATES_SEPARATOR } from "./constants";
 import { BoardState, Coordinates, ShipLimits } from "./interfaces";
 
-export const getRandomInt = (min: number, max: number) =>
+const getRandomInt = (min: number, max: number) =>
   Math.floor(Math.random() * (Math.floor(max) - Math.ceil(min))) +
   Math.ceil(min);
 
