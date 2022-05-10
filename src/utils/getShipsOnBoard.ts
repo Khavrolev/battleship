@@ -1,7 +1,6 @@
 import {
   BOARD_LIMITS,
   BOARD_SIZE,
-  COORDINATES_SEPARATOR,
   MAX_ATTEMPTS_TO_INIT,
   SHIPS_ON_BOARD,
 } from "./constants";
@@ -24,14 +23,14 @@ const getNeighbours = (cell: Coordinates) => {
   const rightColumn = cell.column + 1;
 
   return [
-    `${topRow}${COORDINATES_SEPARATOR}${leftColumn}`,
-    `${topRow}${COORDINATES_SEPARATOR}${cell.column}`,
-    `${topRow}${COORDINATES_SEPARATOR}${rightColumn}`,
-    `${cell.row}${COORDINATES_SEPARATOR}${leftColumn}`,
-    `${cell.row}${COORDINATES_SEPARATOR}${rightColumn}`,
-    `${bottomRow}${COORDINATES_SEPARATOR}${leftColumn}`,
-    `${bottomRow}${COORDINATES_SEPARATOR}${cell.column}`,
-    `${bottomRow}${COORDINATES_SEPARATOR}${rightColumn}`,
+    packCoordinates({ row: topRow, column: leftColumn }),
+    packCoordinates({ row: topRow, column: cell.column }),
+    packCoordinates({ row: topRow, column: rightColumn }),
+    packCoordinates({ row: cell.row, column: leftColumn }),
+    packCoordinates({ row: cell.row, column: rightColumn }),
+    packCoordinates({ row: bottomRow, column: leftColumn }),
+    packCoordinates({ row: bottomRow, column: cell.column }),
+    packCoordinates({ row: bottomRow, column: rightColumn }),
   ];
 };
 

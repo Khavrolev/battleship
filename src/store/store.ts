@@ -1,7 +1,7 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import shipsReducer from "./reducers/shipsSlice";
+import boardReducer from "./reducers/boardSlice";
 
-const rootReducer = combineReducers({ shipsReducer });
+const rootReducer = combineReducers({ boardReducer });
 
 export const setupStore = () => {
   return configureStore({ reducer: rootReducer });

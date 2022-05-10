@@ -8,7 +8,7 @@ import useInterval from "./useInterval";
 
 const useBattle = () => {
   const [run, setRun] = useState(false);
-  const { ships } = useAppSelector((state) => state.shipsReducer);
+  const { ships } = useAppSelector((state) => state.boardReducer);
   const [shots, setShots] = useState<BoardState>({});
 
   useInterval(

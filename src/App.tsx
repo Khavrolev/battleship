@@ -3,7 +3,7 @@ import classes from "./App.module.css";
 import Board from "./components/board/Board";
 import { useAppDispatch } from "./hooks/redux";
 import useBattle from "./hooks/useBattle";
-import { shipsSlice } from "./store/reducers/shipsSlice";
+import { boardSlice } from "./store/reducers/boardSlice";
 import {
   isGameCannotBeStarted,
   isGameNotStarted,
@@ -12,7 +12,7 @@ import {
 import getShipsOnBoard from "./utils/getShipsOnBoard";
 
 const App = () => {
-  const { reset } = shipsSlice.actions;
+  const { reset } = boardSlice.actions;
   const dispatch = useAppDispatch();
   const { run, setRun, ships, shots, setShots } = useBattle();
 

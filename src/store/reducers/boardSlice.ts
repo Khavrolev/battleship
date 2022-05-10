@@ -2,16 +2,18 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import getShipsOnBoard from "../../utils/getShipsOnBoard";
 import { ShipsPosition } from "../../utils/interfaces";
 
-interface ShipsState {
+interface BoardState {
   ships: ShipsPosition;
+  shots: ShipsPosition;
 }
 
-const initialState: ShipsState = {
+const initialState: BoardState = {
   ships: getShipsOnBoard(),
+  shots: {},
 };
 
-export const shipsSlice = createSlice({
-  name: "ships",
+export const boardSlice = createSlice({
+  name: "board",
   initialState,
   reducers: {
     reset(state, action: PayloadAction<ShipsPosition>) {
@@ -20,4 +22,4 @@ export const shipsSlice = createSlice({
   },
 });
 
-export default shipsSlice.reducer;
+export default boardSlice.reducer;
