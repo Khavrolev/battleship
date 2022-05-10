@@ -1,18 +1,12 @@
 import classNames from "classnames";
-import { FC } from "react";
 import { useAppSelector } from "../../hooks/redux";
 import { BOARD_SIZE } from "../../utils/constants";
 import { packCoordinates } from "../../utils/coordinates";
 import { CellStatus } from "../../utils/enums";
-import { BoardState } from "../../utils/interfaces";
 import classes from "./Board.module.css";
 
-interface BoardProps {
-  shots: BoardState;
-}
-
-const Board: FC<BoardProps> = ({ shots }) => {
-  const { ships } = useAppSelector((state) => state.boardReducer);
+const Board = () => {
+  const { ships, shots } = useAppSelector((state) => state.boardReducer);
 
   const getBoard = () => {
     const board = [];

@@ -1,28 +1,36 @@
-import { useState } from "react";
+import { boardSlice } from "../store/reducers/boardSlice";
 import { DELAY_TIMEOUT } from "../utils/constants";
 import { isGameOver } from "../utils/gameStatus";
 import getNextShot from "../utils/getNextShot";
-import { BoardState } from "../utils/interfaces";
-import { useAppSelector } from "./redux";
+import getShipsOnBoard from "../utils/getShipsOnBoard";
+import { useAppDispatch, useAppSelector } from "./redux";
 import useInterval from "./useInterval";
 
 const useBattle = () => {
-  const [run, setRun] = useState(false);
-  const { ships } = useAppSelector((state) => state.boardReducer);
-  const [shots, setShots] = useState<BoardState>({});
+  const { runGame, reset, makeShot } = boardSlice.actions;
+  const dispatch = useAppDispatch();
+  const { run, ships, shots } = useAppSelector((state) => state.boardReducer);
+
+  const handleRunGame = () => {
+    dispatch(runGame(!run));
+  };
+
+  const handleReset = () => {
+    dispatch(reset(getShipsOnBoard()));
+  };
 
   useInterval(
     () => {
       if (isGameOver(ships, shots)) {
-        setRun(false);
+        handleRunGame();
       } else {
-        setShots(getNextShot(ships, shots));
+        dispatch(makeShot(getNextShot(ships, shots)));
       }
     },
     run ? DELAY_TIMEOUT : null,
   );
 
-  return { run, setRun, ships, shots, setShots };
+  return { run, handleRunGame, ships, shots, handleReset };
 };
 
 export default useBattle;

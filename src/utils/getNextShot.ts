@@ -1,8 +1,8 @@
 import { getNewCoordinates } from "./coordinates";
 import { CellStatus } from "./enums";
-import { BoardState, ShipsPosition } from "./interfaces";
+import { BoardShots, ShipsPosition } from "./interfaces";
 
-const getNextShot = (ships: ShipsPosition, shots: BoardState): BoardState => {
+const getNextShot = (ships: ShipsPosition, shots: BoardShots): BoardShots => {
   const newCoordinates = getNewCoordinates(shots);
 
   return {

@@ -1,20 +1,15 @@
 import classNames from "classnames";
 import classes from "./App.module.css";
 import Board from "./components/board/Board";
-import { useAppDispatch } from "./hooks/redux";
 import useBattle from "./hooks/useBattle";
-import { boardSlice } from "./store/reducers/boardSlice";
 import {
   isGameCannotBeStarted,
   isGameNotStarted,
   isGameOver,
 } from "./utils/gameStatus";
-import getShipsOnBoard from "./utils/getShipsOnBoard";
 
 const App = () => {
-  const { reset } = boardSlice.actions;
-  const dispatch = useAppDispatch();
-  const { run, setRun, ships, shots, setShots } = useBattle();
+  const { run, handleRunGame, ships, shots, handleReset } = useBattle();
 
   const gameCannotBeStarted = isGameCannotBeStarted(ships);
   const gameNotStarted = isGameNotStarted(shots);
@@ -28,11 +23,6 @@ const App = () => {
     return `Shot #${Object.keys(shots).length} ${gameOver ? "Game Over!" : ""}`;
   };
 
-  const handleReset = () => {
-    setShots({});
-    dispatch(reset(getShipsOnBoard()));
-  };
-
   return (
     <div className={classes.wrapper}>
       <div className={classes.wrapper__header}>
@@ -41,7 +31,7 @@ const App = () => {
       <div className={classes.wrapper__buttons}>
         <button
           className={classes.button}
-          onClick={() => setRun(!run)}
+          onClick={handleRunGame}
           disabled={gameOver}
         >
           {run ? "Stop" : "Start"}
@@ -64,7 +54,7 @@ const App = () => {
         </div>
       </div>
       <div className={classes.wrapper__board}>
-        <Board shots={shots} />
+        <Board />
       </div>
     </div>
   );
