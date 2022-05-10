@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/battleship/static/css/main.3298c27b.css",
+    "main.css": "/battleship/static/css/main.ab949108.css",
     "main.js": "/battleship/static/js/main.d139863f.js",
     "index.html": "/battleship/index.html",
-    "main.3298c27b.css.map": "/battleship/static/css/main.3298c27b.css.map",
+    "main.ab949108.css.map": "/battleship/static/css/main.ab949108.css.map",
     "main.d139863f.js.map": "/battleship/static/js/main.d139863f.js.map"
   },
   "entrypoints": [
-    "static/css/main.3298c27b.css",
+    "static/css/main.ab949108.css",
     "static/js/main.d139863f.js"
   ]
 }
