@@ -2,13 +2,13 @@ import { useState } from "react";
 import { DELAY_TIMEOUT } from "../utils/constants";
 import { isGameOver } from "../utils/gameStatus";
 import getNextShot from "../utils/getNextShot";
-import getShipsOnBoard from "../utils/getShipsOnBoard";
-import { BoardState, ShipsPosition } from "../utils/interfaces";
+import { BoardState } from "../utils/interfaces";
+import { useAppSelector } from "./redux";
 import useInterval from "./useInterval";
 
 const useBattle = () => {
   const [run, setRun] = useState(false);
-  const [ships, setShips] = useState<ShipsPosition>(() => getShipsOnBoard());
+  const { ships } = useAppSelector((state) => state.shipsReducer);
   const [shots, setShots] = useState<BoardState>({});
 
   useInterval(
@@ -22,7 +22,7 @@ const useBattle = () => {
     run ? DELAY_TIMEOUT : null,
   );
 
-  return { run, setRun, ships, setShips, shots, setShots };
+  return { run, setRun, ships, shots, setShots };
 };
 
 export default useBattle;

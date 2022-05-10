@@ -1,16 +1,18 @@
 import classNames from "classnames";
 import { FC } from "react";
+import { useAppSelector } from "../../hooks/redux";
 import { BOARD_SIZE, COORDINATES_SEPARATOR } from "../../utils/constants";
 import { CellStatus } from "../../utils/enums";
-import { BoardState, ShipsPosition } from "../../utils/interfaces";
+import { BoardState } from "../../utils/interfaces";
 import classes from "./Board.module.css";
 
 interface BoardProps {
-  ships: ShipsPosition;
   shots: BoardState;
 }
 
-const Board: FC<BoardProps> = ({ ships, shots }) => {
+const Board: FC<BoardProps> = ({ shots }) => {
+  const { ships } = useAppSelector((state) => state.shipsReducer);
+
   const getBoard = () => {
     const board = [];
     for (let i = 0; i < BOARD_SIZE.rows; i += 1) {

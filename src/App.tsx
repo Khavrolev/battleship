@@ -1,7 +1,9 @@
 import classNames from "classnames";
 import classes from "./App.module.css";
 import Board from "./components/board/Board";
+import { useAppDispatch } from "./hooks/redux";
 import useBattle from "./hooks/useBattle";
+import { shipsSlice } from "./store/reducers/shipsSlice";
 import {
   isGameCannotBeStarted,
   isGameNotStarted,
@@ -10,7 +12,9 @@ import {
 import getShipsOnBoard from "./utils/getShipsOnBoard";
 
 const App = () => {
-  const { run, setRun, ships, setShips, shots, setShots } = useBattle();
+  const { reset } = shipsSlice.actions;
+  const dispatch = useAppDispatch();
+  const { run, setRun, ships, shots, setShots } = useBattle();
 
   const gameCannotBeStarted = isGameCannotBeStarted(ships);
   const gameNotStarted = isGameNotStarted(shots);
@@ -26,7 +30,7 @@ const App = () => {
 
   const handleReset = () => {
     setShots({});
-    setShips(() => getShipsOnBoard());
+    dispatch(reset(getShipsOnBoard()));
   };
 
   return (
@@ -60,7 +64,7 @@ const App = () => {
         </div>
       </div>
       <div className={classes.wrapper__board}>
-        <Board ships={ships} shots={shots} />
+        <Board shots={shots} />
       </div>
     </div>
   );
