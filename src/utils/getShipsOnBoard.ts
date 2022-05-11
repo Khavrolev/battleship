@@ -18,6 +18,10 @@ const getRandomBoolean = () => Math.random() < 0.5;
 const getBiggestCoordinates = (shipsCoordinates: Coordinates[]) => {
   return shipsCoordinates.reduce(
     (acc, coordinates) => {
+      if (coordinates.row < 0 || coordinates.column < 0) {
+        throw new Error("Coordinates could't be negative");
+      }
+
       const newCoordinates = { ...acc };
       if (coordinates.row > acc.row) {
         newCoordinates.row = coordinates.row;
@@ -32,15 +36,15 @@ const getBiggestCoordinates = (shipsCoordinates: Coordinates[]) => {
   );
 };
 
-const getReversed = (coordinates: Coordinates) => {
+const getReversedCoordinates = (coordinates: Coordinates) => {
   const { row, column } = coordinates;
   return { row: column, column: row };
 };
 
 const checkShipSize = (biggestCoordinates: Coordinates) => {
   if (
-    biggestCoordinates.column > BOARD_SIZE.columns ||
-    biggestCoordinates.row > BOARD_SIZE.rows
+    biggestCoordinates.column > BOARD_SIZE.columns - 1 ||
+    biggestCoordinates.row > BOARD_SIZE.rows - 1
   ) {
     throw new Error("The size of ship is larger than board");
   }
@@ -78,11 +82,13 @@ const getShipOnBoard = (type: string): BoardData => {
   const horisontalMirroring = getRandomBoolean();
 
   const biggestCoordinates = reverse
-    ? getReversed(getBiggestCoordinates(shipsCoordinates))
+    ? getReversedCoordinates(getBiggestCoordinates(shipsCoordinates))
     : getBiggestCoordinates(shipsCoordinates);
 
   shipsCoordinates = shipsCoordinates.reduce((acc, coordinates) => {
-    let { row, column } = reverse ? getReversed(coordinates) : coordinates;
+    let { row, column } = reverse
+      ? getReversedCoordinates(coordinates)
+      : coordinates;
     if (verticalMirroring) {
       column = biggestCoordinates.column - column;
     }
