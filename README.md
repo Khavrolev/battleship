@@ -30,6 +30,6 @@ npm run start
   - BOARD_SIZE: numbers of rows and columns and cell size;
   - DELAY_TIMEOUT: time interval between shots in ms;
   - MAX_ATTEMPTS_TO_INIT: max number of attempts to find position of ships on board;
-  - SHIPS_ON_BOARD: amount of ships of each type, sizes of long and short sizes of ships. Technically short side can be larger than long size, game will work, but it's not good solution.
+  - SHIPS_ON_BOARD: amount of ships of each type, cells position. Technically you can have empty cells, but it's not good solution.
 
 - You can use [GitHub Pages](https://khavrolev.github.io/battleship/).
