@@ -15,6 +15,16 @@ export const getRandomCoordinates = (limits: ShipLimits): Coordinates => {
 export const packCoordinates = (coordinates: Coordinates) =>
   `${coordinates.row}${COORDINATES_SEPARATOR}${coordinates.column}`;
 
+export const parseCoordinates = (cell: string): Coordinates => {
+  const cellArray = cell.split(COORDINATES_SEPARATOR);
+
+  if (cellArray.length !== 2 || cellArray.includes("")) {
+    throw new Error(`Wrong input`);
+  }
+
+  return { row: +cellArray[0], column: +cellArray[1] };
+};
+
 export const getNewCoordinates = (shots: BoardShots) => {
   let coordinates = "";
 

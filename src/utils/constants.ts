@@ -3,8 +3,7 @@ import { ShipLimits } from "./interfaces";
 
 interface ShipsConfig {
   amount: number;
-  longSize: number;
-  shortSize: number;
+  position: string[];
 }
 
 export const BOARD_SIZE = { rows: 10, columns: 10, cellSize: 30 };
@@ -18,7 +17,23 @@ export const BOARD_LIMITS: ShipLimits = {
 };
 
 export const SHIPS_ON_BOARD: { [key: string]: ShipsConfig } = {
-  [ShipType.LShaped]: { amount: 1, longSize: 3, shortSize: 2 },
-  [ShipType.IShaped]: { amount: 1, longSize: 4, shortSize: 1 },
-  [ShipType.DotShaped]: { amount: 2, longSize: 1, shortSize: 1 },
+  [ShipType.LShaped]: {
+    amount: 1,
+    position: [
+      `0${COORDINATES_SEPARATOR}0`,
+      `0${COORDINATES_SEPARATOR}1`,
+      `1${COORDINATES_SEPARATOR}0`,
+      `2${COORDINATES_SEPARATOR}0`,
+    ],
+  },
+  [ShipType.IShaped]: {
+    amount: 1,
+    position: [
+      `0${COORDINATES_SEPARATOR}0`,
+      `1${COORDINATES_SEPARATOR}0`,
+      `2${COORDINATES_SEPARATOR}0`,
+      `3${COORDINATES_SEPARATOR}0`,
+    ],
+  },
+  [ShipType.DotShaped]: { amount: 2, position: [`0${COORDINATES_SEPARATOR}0`] },
 };
