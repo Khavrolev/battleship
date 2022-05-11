@@ -8,10 +8,21 @@ import classes from "./Board.module.css";
 const Board = () => {
   const { ships, shots } = useAppSelector((state) => state.boardReducer);
 
+  const getNumber = (i: number, j: number): string => {
+    if (i === -1 && j !== -1) {
+      return `${j + 1}`;
+    }
+    if (j === -1 && i !== -1) {
+      return `${i + 1}`;
+    }
+
+    return "";
+  };
+
   const getBoard = () => {
     const board = [];
-    for (let i = 0; i < BOARD_SIZE.rows; i += 1) {
-      for (let j = 0; j < BOARD_SIZE.columns; j += 1) {
+    for (let i = -1; i < BOARD_SIZE.rows; i += 1) {
+      for (let j = -1; j < BOARD_SIZE.columns; j += 1) {
         board.push(
           <div
             key={packCoordinates({ row: i, column: j })}
@@ -20,6 +31,7 @@ const Board = () => {
               height: `${BOARD_SIZE.cellSize}px`,
             }}
             className={classNames(classes.board__cell, {
+              [classes.board__cell_number]: i === -1 || j === -1,
               [classes.board__cell_alive]:
                 ships[packCoordinates({ row: i, column: j })] &&
                 !shots[packCoordinates({ row: i, column: j })],
@@ -32,7 +44,9 @@ const Board = () => {
             })}
             data-row={i}
             data-column={j}
-          />,
+          >
+            {getNumber(i, j)}
+          </div>,
         );
       }
     }
@@ -42,7 +56,7 @@ const Board = () => {
   return (
     <div
       style={{
-        gridTemplateColumns: `repeat(${BOARD_SIZE.columns}, auto)`,
+        gridTemplateColumns: `repeat(${BOARD_SIZE.columns + 1}, auto)`,
       }}
       className={classes.board}
     >

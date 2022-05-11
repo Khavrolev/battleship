@@ -10,6 +10,13 @@
   box-sizing: border-box;
 }
 
+.board__cell_number {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #b2afaf;
+}
+
 .board__cell_alive {
   background-color: #008000;
 }
