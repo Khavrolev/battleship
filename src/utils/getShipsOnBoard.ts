@@ -79,11 +79,13 @@ const getShipOnBoard = (type: string): BoardData => {
 
   const reverse = getRandomBoolean();
   const verticalMirroring = getRandomBoolean();
-  const horisontalMirroring = getRandomBoolean();
+  const horizontalMirroring = getRandomBoolean();
 
   const biggestCoordinates = reverse
     ? getReversedCoordinates(getBiggestCoordinates(shipsCoordinates))
     : getBiggestCoordinates(shipsCoordinates);
+
+  checkShipSize(biggestCoordinates);
 
   shipsCoordinates = shipsCoordinates.reduce((acc, coordinates) => {
     let { row, column } = reverse
@@ -92,7 +94,7 @@ const getShipOnBoard = (type: string): BoardData => {
     if (verticalMirroring) {
       column = biggestCoordinates.column - column;
     }
-    if (horisontalMirroring) {
+    if (horizontalMirroring) {
       row = biggestCoordinates.row - row;
     }
 
@@ -103,8 +105,6 @@ const getShipOnBoard = (type: string): BoardData => {
 
     return [...acc, newCoordinates];
   }, [] as Coordinates[]);
-
-  checkShipSize(biggestCoordinates);
 
   const limits: ShipLimits = {
     row: {
