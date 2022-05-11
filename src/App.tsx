@@ -1,15 +1,25 @@
 import classNames from "classnames";
 import classes from "./App.module.css";
 import Board from "./components/board/Board";
+import { useAppDispatch } from "./hooks/redux";
 import useBattle from "./hooks/useBattle";
+import { boardSlice } from "./store/reducers/boardSlice";
 import {
   isGameCannotBeStarted,
   // isGameNotStarted,
   isGameOver,
 } from "./utils/gameStatus";
+import getShipsOnBoard from "./utils/getShipsOnBoard";
 
 const App = () => {
-  const { run, handleRunGame, ships, shots, handleReset } = useBattle();
+  const { run, handleRunGame, ships, shots } = useBattle();
+
+  const dispatch = useAppDispatch();
+  const { reset } = boardSlice.actions;
+
+  const handleReset = () => {
+    dispatch(reset(getShipsOnBoard()));
+  };
 
   const gameCannotBeStarted = isGameCannotBeStarted(ships);
   // const gameNotStarted = isGameNotStarted(shots);
