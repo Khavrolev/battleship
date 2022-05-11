@@ -42,7 +42,7 @@ const Board = () => {
   return (
     <div
       style={{
-        gridTemplateColumns: `repeat(${BOARD_SIZE.columns}, ${BOARD_SIZE.cellSize}px)`,
+        gridTemplateColumns: `repeat(${BOARD_SIZE.columns}, auto)`,
       }}
       className={classes.board}
     >
