@@ -4,7 +4,7 @@ import Board from "./components/board/Board";
 import useBattle from "./hooks/useBattle";
 import {
   isGameCannotBeStarted,
-  isGameNotStarted,
+  // isGameNotStarted,
   isGameOver,
 } from "./utils/gameStatus";
 
@@ -12,7 +12,7 @@ const App = () => {
   const { run, handleRunGame, ships, shots, handleReset } = useBattle();
 
   const gameCannotBeStarted = isGameCannotBeStarted(ships);
-  const gameNotStarted = isGameNotStarted(shots);
+  // const gameNotStarted = isGameNotStarted(shots);
   const gameOver = isGameOver(ships, shots);
 
   const getTitle = () => {
@@ -36,11 +36,7 @@ const App = () => {
         >
           {run ? "Stop" : "Start"}
         </button>
-        <button
-          className={classes.button}
-          onClick={handleReset}
-          disabled={!gameNotStarted && !gameOver}
-        >
+        <button className={classes.button} onClick={handleReset} disabled={run}>
           Reset
         </button>
       </div>

@@ -51,34 +51,11 @@ const getLShipOnBoard = (): BoardData => {
   const vertical = getRandomBoolean();
   const incrementShortSide = getRandomBoolean();
   const incrementLongSide = getRandomBoolean();
-  checkShipSize(ShipType.LShaped, !vertical);
+  checkShipSize(ShipType.LShaped, vertical);
 
   const limits: ShipLimits = { ...BOARD_LIMITS };
 
   if (vertical) {
-    if (incrementShortSide) {
-      limits.row = {
-        min: 0,
-        max: BOARD_SIZE.rows - SHIPS_ON_BOARD[ShipType.LShaped].shortSize,
-      };
-    } else {
-      limits.row = {
-        min: SHIPS_ON_BOARD[ShipType.LShaped].shortSize - 1,
-        max: BOARD_SIZE.rows - 1,
-      };
-    }
-    if (incrementLongSide) {
-      limits.column = {
-        min: 0,
-        max: BOARD_SIZE.columns - SHIPS_ON_BOARD[ShipType.LShaped].longSize,
-      };
-    } else {
-      limits.column = {
-        min: SHIPS_ON_BOARD[ShipType.LShaped].longSize - 1,
-        max: BOARD_SIZE.columns - 1,
-      };
-    }
-  } else {
     if (incrementLongSide) {
       limits.row = {
         min: 0,
@@ -101,6 +78,29 @@ const getLShipOnBoard = (): BoardData => {
         max: BOARD_SIZE.columns - 1,
       };
     }
+  } else {
+    if (incrementShortSide) {
+      limits.row = {
+        min: 0,
+        max: BOARD_SIZE.rows - SHIPS_ON_BOARD[ShipType.LShaped].shortSize,
+      };
+    } else {
+      limits.row = {
+        min: SHIPS_ON_BOARD[ShipType.LShaped].shortSize - 1,
+        max: BOARD_SIZE.rows - 1,
+      };
+    }
+    if (incrementLongSide) {
+      limits.column = {
+        min: 0,
+        max: BOARD_SIZE.columns - SHIPS_ON_BOARD[ShipType.LShaped].longSize,
+      };
+    } else {
+      limits.column = {
+        min: SHIPS_ON_BOARD[ShipType.LShaped].longSize - 1,
+        max: BOARD_SIZE.columns - 1,
+      };
+    }
   }
 
   const coordinates = getRandomCoordinates(limits);
@@ -113,17 +113,18 @@ const getLShipOnBoard = (): BoardData => {
       SHIPS_ON_BOARD[ShipType.LShaped].longSize -
       1,
   };
-  for (let i = 0; i < SHIPS_ON_BOARD[ShipType.LShaped].shortSize; i += 1) {
+
+  for (let i = 1; i < SHIPS_ON_BOARD[ShipType.LShaped].longSize; i += 1) {
     const { row, column } = coordinates;
 
     const cell: Coordinates = { row, column };
     if (vertical) {
-      if (incrementShortSide) {
+      if (incrementLongSide) {
         cell.row = row + i;
       } else {
         cell.row = row - i;
       }
-    } else if (incrementShortSide) {
+    } else if (incrementLongSide) {
       cell.column = column + i;
     } else {
       cell.column = column - i;
@@ -133,17 +134,17 @@ const getLShipOnBoard = (): BoardData => {
     result.unacceptable = [...result.unacceptable, ...getNeighbours(cell)];
   }
 
-  for (let i = 1; i < SHIPS_ON_BOARD[ShipType.LShaped].longSize; i += 1) {
+  for (let i = 0; i < SHIPS_ON_BOARD[ShipType.LShaped].shortSize; i += 1) {
     const { row, column } = coordinates;
 
     const cell: Coordinates = { row, column };
     if (vertical) {
-      if (incrementLongSide) {
+      if (incrementShortSide) {
         cell.column = column + i;
       } else {
         cell.column = column - i;
       }
-    } else if (incrementLongSide) {
+    } else if (incrementShortSide) {
       cell.row = row + i;
     } else {
       cell.row = row - i;
