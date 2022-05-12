@@ -1,12 +1,12 @@
 import classNames from "classnames";
 import { useAppSelector } from "../../hooks/redux";
-import { BOARD_SIZE } from "../../utils/constants";
 import { packCoordinates } from "../../utils/coordinates";
 import { CellStatus } from "../../utils/enums";
 import classes from "./Board.module.css";
 
 const Board = () => {
   const { ships, shots } = useAppSelector((state) => state.boardReducer);
+  const { boardSize } = useAppSelector((state) => state.settingsReducer);
 
   const getNumber = (i: number, j: number): string => {
     if (i === -1 && j !== -1) {
@@ -21,14 +21,14 @@ const Board = () => {
 
   const getBoard = () => {
     const board = [];
-    for (let i = -1; i < BOARD_SIZE.rows; i += 1) {
-      for (let j = -1; j < BOARD_SIZE.columns; j += 1) {
+    for (let i = -1; i < boardSize.rows; i += 1) {
+      for (let j = -1; j < boardSize.columns; j += 1) {
         board.push(
           <div
             key={packCoordinates({ row: i, column: j })}
             style={{
-              width: `${BOARD_SIZE.cellSize}px`,
-              height: `${BOARD_SIZE.cellSize}px`,
+              width: `${boardSize.cellSize}px`,
+              height: `${boardSize.cellSize}px`,
             }}
             className={classNames(classes.board__cell, {
               [classes.board__cell_number]: i === -1 || j === -1,
@@ -56,7 +56,7 @@ const Board = () => {
   return (
     <div
       style={{
-        gridTemplateColumns: `repeat(${BOARD_SIZE.columns + 1}, auto)`,
+        gridTemplateColumns: `repeat(${boardSize.columns + 1}, auto)`,
       }}
       className={classes.board}
     >

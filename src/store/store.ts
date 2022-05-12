@@ -1,7 +1,8 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import boardReducer from "./reducers/boardSlice";
+import settingsReducer from "./reducers/settingsSlice";
 
-const rootReducer = combineReducers({ boardReducer });
+const rootReducer = combineReducers({ boardReducer, settingsReducer });
 
 export const setupStore = () => {
   return configureStore({ reducer: rootReducer });

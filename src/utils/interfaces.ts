@@ -13,7 +13,17 @@ export interface Coordinates {
   column: number;
 }
 
+export interface ShipsConfig {
+  [key: string]: { amount: number; position: string[] };
+}
+
 export interface ShipLimits {
   row: { min: number; max: number };
   column: { min: number; max: number };
+}
+
+export interface BoardSize {
+  rows: number;
+  columns: number;
+  cellSize: number;
 }

@@ -1,9 +1,8 @@
-import { BOARD_SIZE } from "./constants";
 import { CellStatus } from "./enums";
-import { BoardShots, ShipsPosition } from "./interfaces";
+import { BoardShots, BoardSize, ShipsPosition } from "./interfaces";
 
-const isNoShot = (shots: BoardShots) =>
-  Object.keys(shots).length === BOARD_SIZE.rows * BOARD_SIZE.columns;
+const isNoShot = (shots: BoardShots, boardSize: BoardSize) =>
+  Object.keys(shots).length === boardSize.rows * boardSize.columns;
 
 const isShipsSunk = (ships: ShipsPosition, shots: BoardShots) =>
   Object.keys(ships).length ===
@@ -12,8 +11,8 @@ const isShipsSunk = (ships: ShipsPosition, shots: BoardShots) =>
 export const isGameCannotBeStarted = (ships: ShipsPosition) =>
   Object.keys(ships).length === 0;
 
-export const isGameOver = (ships: ShipsPosition, shots: BoardShots) =>
-  isNoShot(shots) || isShipsSunk(ships, shots);
-
-export const isGameNotStarted = (shots: BoardShots) =>
-  Object.keys(shots).length === 0;
+export const isGameOver = (
+  ships: ShipsPosition,
+  shots: BoardShots,
+  boardSize: BoardSize,
+) => isNoShot(shots, boardSize) || isShipsSunk(ships, shots);

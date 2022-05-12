@@ -1,9 +1,13 @@
 import { getNewCoordinates } from "./coordinates";
 import { CellStatus } from "./enums";
-import { BoardShots, ShipsPosition } from "./interfaces";
+import { BoardShots, ShipLimits, ShipsPosition } from "./interfaces";
 
-const getNextShot = (ships: ShipsPosition, shots: BoardShots): BoardShots => {
-  const newCoordinates = getNewCoordinates(shots);
+const getNextShot = (
+  ships: ShipsPosition,
+  shots: BoardShots,
+  limits: ShipLimits,
+): BoardShots => {
+  const newCoordinates = getNewCoordinates(shots, limits);
 
   return {
     ...shots,

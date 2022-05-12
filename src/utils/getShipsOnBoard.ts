@@ -1,11 +1,16 @@
-import { BOARD_SIZE, MAX_ATTEMPTS_TO_INIT, SHIPS_ON_BOARD } from "./constants";
 import {
   getRandomCoordinates,
   packCoordinates,
   parseCoordinates,
 } from "./coordinates";
 import { ShipType } from "./enums";
-import { Coordinates, ShipLimits, ShipsPosition } from "./interfaces";
+import {
+  BoardSize,
+  Coordinates,
+  ShipLimits,
+  ShipsConfig,
+  ShipsPosition,
+} from "./interfaces";
 
 interface BoardData {
   occupied: ShipsPosition;
@@ -41,10 +46,13 @@ const getReversedCoordinates = (coordinates: Coordinates) => {
   return { row: column, column: row };
 };
 
-const checkShipSize = (biggestCoordinates: Coordinates) => {
+const checkShipSize = (
+  biggestCoordinates: Coordinates,
+  boardSize: BoardSize,
+) => {
   if (
-    biggestCoordinates.column > BOARD_SIZE.columns - 1 ||
-    biggestCoordinates.row > BOARD_SIZE.rows - 1
+    biggestCoordinates.column > boardSize.columns - 1 ||
+    biggestCoordinates.row > boardSize.rows - 1
   ) {
     throw new Error("The size of ship is larger than board");
   }
@@ -68,12 +76,16 @@ const getNeighbours = (coordinates: Coordinates) => {
   ];
 };
 
-const getShipOnBoard = (type: string): BoardData => {
+const getShipOnBoard = (
+  type: string,
+  boardSize: BoardSize,
+  shipsOnBoard: ShipsConfig,
+): BoardData => {
   if (!(type in ShipType)) {
     throw new Error("Wrong ship type");
   }
 
-  let shipsCoordinates = SHIPS_ON_BOARD[type].position.map((cell) =>
+  let shipsCoordinates = shipsOnBoard[type].position.map((cell) =>
     parseCoordinates(cell),
   );
 
@@ -85,7 +97,7 @@ const getShipOnBoard = (type: string): BoardData => {
     ? getReversedCoordinates(getBiggestCoordinates(shipsCoordinates))
     : getBiggestCoordinates(shipsCoordinates);
 
-  checkShipSize(biggestCoordinates);
+  checkShipSize(biggestCoordinates, boardSize);
 
   shipsCoordinates = shipsCoordinates.reduce((acc, coordinates) => {
     let { row, column } = reverse
@@ -109,11 +121,11 @@ const getShipOnBoard = (type: string): BoardData => {
   const limits: ShipLimits = {
     row: {
       min: 0,
-      max: BOARD_SIZE.rows - biggestCoordinates.row - 1,
+      max: boardSize.rows - biggestCoordinates.row - 1,
     },
     column: {
       min: 0,
-      max: BOARD_SIZE.columns - biggestCoordinates.column - 1,
+      max: boardSize.columns - biggestCoordinates.column - 1,
     },
   };
 
@@ -136,7 +148,7 @@ const getShipOnBoard = (type: string): BoardData => {
     {
       occupied: {},
       unacceptable: [],
-      weight: SHIPS_ON_BOARD[type].position.length,
+      weight: shipsOnBoard[type].position.length,
     } as BoardData,
   );
 
@@ -149,15 +161,19 @@ const getShipOnBoard = (type: string): BoardData => {
   return result;
 };
 
-const getShipsOnBoard = (): ShipsPosition => {
-  const types = Object.keys(SHIPS_ON_BOARD);
+const getShipsOnBoard = (
+  maxAttemptsToInit: number,
+  boardSize: BoardSize,
+  shipsOnBoard: ShipsConfig,
+): ShipsPosition => {
+  const types = Object.keys(shipsOnBoard);
   const generation = { finished: false, counter: 0 };
   let result: ShipsPosition = {};
 
   while (!generation.finished) {
     generation.counter += 1;
 
-    if (generation.counter === MAX_ATTEMPTS_TO_INIT) {
+    if (generation.counter === maxAttemptsToInit) {
       return {};
     }
 
@@ -165,8 +181,8 @@ const getShipsOnBoard = (): ShipsPosition => {
       const ships = types.reduce(
         (acc, type) => {
           let { occupied, unacceptable, weight } = { ...acc };
-          for (let i = 0; i < SHIPS_ON_BOARD[type].amount; i += 1) {
-            const ship = getShipOnBoard(type);
+          for (let i = 0; i < shipsOnBoard[type].amount; i += 1) {
+            const ship = getShipOnBoard(type, boardSize, shipsOnBoard);
             occupied = { ...occupied, ...ship.occupied };
             unacceptable = [...unacceptable, ...ship.unacceptable];
             weight += ship.weight;

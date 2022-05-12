@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import getShipsOnBoard from "../../utils/getShipsOnBoard";
 import { BoardShots, ShipsPosition } from "../../utils/interfaces";
 
 interface BoardState {
@@ -10,7 +9,7 @@ interface BoardState {
 
 const initialState: BoardState = {
   run: false,
-  ships: getShipsOnBoard(),
+  ships: {},
   shots: {},
 };
 
@@ -18,6 +17,9 @@ export const boardSlice = createSlice({
   name: "board",
   initialState,
   reducers: {
+    initShips(state, action: PayloadAction<ShipsPosition>) {
+      state.ships = action.payload;
+    },
     runGame(state, action: PayloadAction<boolean>) {
       state.run = action.payload;
     },

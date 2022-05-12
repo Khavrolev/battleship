@@ -1,4 +1,4 @@
-import { BOARD_LIMITS, COORDINATES_SEPARATOR } from "./constants";
+import { COORDINATES_SEPARATOR } from "./constants";
 import { BoardShots, Coordinates, ShipLimits } from "./interfaces";
 
 const getRandomInt = (min: number, max: number) =>
@@ -25,11 +25,11 @@ export const parseCoordinates = (cell: string): Coordinates => {
   return { row: +cellArray[0], column: +cellArray[1] };
 };
 
-export const getNewCoordinates = (shots: BoardShots) => {
+export const getNewCoordinates = (shots: BoardShots, limits: ShipLimits) => {
   let coordinates = "";
 
   do {
-    coordinates = packCoordinates(getRandomCoordinates(BOARD_LIMITS));
+    coordinates = packCoordinates(getRandomCoordinates(limits));
   } while (shots[coordinates]);
 
   return coordinates;

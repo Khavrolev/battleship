@@ -1,29 +1,32 @@
 import classNames from "classnames";
+import { useState } from "react";
 import classes from "./App.module.css";
 import Board from "./components/board/Board";
-import { useAppDispatch } from "./hooks/redux";
+import Settings from "./components/popup/Settings";
+import { useAppDispatch, useAppSelector } from "./hooks/redux";
 import useBattle from "./hooks/useBattle";
 import { boardSlice } from "./store/reducers/boardSlice";
-import {
-  isGameCannotBeStarted,
-  // isGameNotStarted,
-  isGameOver,
-} from "./utils/gameStatus";
+import { isGameCannotBeStarted, isGameOver } from "./utils/gameStatus";
 import getShipsOnBoard from "./utils/getShipsOnBoard";
 
 const App = () => {
+  const [modalOpened, setModalOpened] = useState(false);
   const { run, handleRunGame, ships, shots } = useBattle();
 
   const dispatch = useAppDispatch();
   const { reset } = boardSlice.actions;
+  const { boardSize, maxAttemptsToInit, shipsOnBoard } = useAppSelector(
+    (state) => state.settingsReducer,
+  );
 
   const handleReset = () => {
-    dispatch(reset(getShipsOnBoard()));
+    dispatch(
+      reset(getShipsOnBoard(maxAttemptsToInit, boardSize, shipsOnBoard)),
+    );
   };
 
   const gameCannotBeStarted = isGameCannotBeStarted(ships);
-  // const gameNotStarted = isGameNotStarted(shots);
-  const gameOver = isGameOver(ships, shots);
+  const gameOver = isGameOver(ships, shots, boardSize);
 
   const getTitle = () => {
     if (gameCannotBeStarted) {
@@ -35,6 +38,10 @@ const App = () => {
 
   return (
     <div className={classes.wrapper}>
+      <Settings
+        modalOpened={modalOpened}
+        handleModalOpenedChange={setModalOpened}
+      />
       <div className={classes.wrapper__header}>
         <h1 className={classes.header}>Battleship</h1>
       </div>
@@ -48,6 +55,13 @@ const App = () => {
         </button>
         <button className={classes.button} onClick={handleReset} disabled={run}>
           Reset
+        </button>
+        <button
+          className={classes.button}
+          onClick={() => setModalOpened(true)}
+          disabled={run}
+        >
+          Settings
         </button>
       </div>
       <div className={classes.wrapper__counter}>

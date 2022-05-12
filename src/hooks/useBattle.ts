@@ -1,15 +1,23 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { boardSlice } from "../store/reducers/boardSlice";
-import { DELAY_TIMEOUT } from "../utils/constants";
 import { isGameOver } from "../utils/gameStatus";
 import getNextShot from "../utils/getNextShot";
+import getShipsOnBoard from "../utils/getShipsOnBoard";
 import { useAppDispatch, useAppSelector } from "./redux";
 import useInterval from "./useInterval";
 
 const useBattle = () => {
   const dispatch = useAppDispatch();
-  const { runGame, makeShot } = boardSlice.actions;
+  const { initShips, runGame, makeShot } = boardSlice.actions;
   const { run, ships, shots } = useAppSelector((state) => state.boardReducer);
+  const { boardSize, delayTimeout, maxAttemptsToInit, shipsOnBoard } =
+    useAppSelector((state) => state.settingsReducer);
+
+  useEffect(() => {
+    dispatch(
+      initShips(getShipsOnBoard(maxAttemptsToInit, boardSize, shipsOnBoard)),
+    );
+  }, [boardSize, dispatch, initShips, maxAttemptsToInit, shipsOnBoard]);
 
   const handleRunGame = useCallback(() => {
     dispatch(runGame(!run));
@@ -17,13 +25,17 @@ const useBattle = () => {
 
   useInterval(
     () => {
-      if (isGameOver(ships, shots)) {
+      if (isGameOver(ships, shots, boardSize)) {
         handleRunGame();
       } else {
-        dispatch(makeShot(getNextShot(ships, shots)));
+        const limits = {
+          row: { min: 0, max: boardSize.rows - 1 },
+          column: { min: 0, max: boardSize.columns - 1 },
+        };
+        dispatch(makeShot(getNextShot(ships, shots, limits)));
       }
     },
-    run ? DELAY_TIMEOUT : null,
+    run ? delayTimeout : null,
   );
 
   return { run, handleRunGame, ships, shots };
