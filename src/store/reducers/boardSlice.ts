@@ -17,9 +17,6 @@ export const boardSlice = createSlice({
   name: "board",
   initialState,
   reducers: {
-    initShips(state, action: PayloadAction<ShipsPosition>) {
-      state.ships = action.payload;
-    },
     runGame(state, action: PayloadAction<boolean>) {
       state.run = action.payload;
     },

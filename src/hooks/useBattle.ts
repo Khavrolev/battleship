@@ -8,16 +8,16 @@ import useInterval from "./useInterval";
 
 const useBattle = () => {
   const dispatch = useAppDispatch();
-  const { initShips, runGame, makeShot } = boardSlice.actions;
+  const { reset, runGame, makeShot } = boardSlice.actions;
   const { run, ships, shots } = useAppSelector((state) => state.boardReducer);
   const { boardSize, delayTimeout, maxAttemptsToInit, shipsOnBoard } =
     useAppSelector((state) => state.settingsReducer);
 
   useEffect(() => {
     dispatch(
-      initShips(getShipsOnBoard(maxAttemptsToInit, boardSize, shipsOnBoard)),
+      reset(getShipsOnBoard(maxAttemptsToInit, boardSize, shipsOnBoard)),
     );
-  }, [boardSize, dispatch, initShips, maxAttemptsToInit, shipsOnBoard]);
+  }, [boardSize, dispatch, reset, maxAttemptsToInit, shipsOnBoard]);
 
   const handleRunGame = useCallback(() => {
     dispatch(runGame(!run));

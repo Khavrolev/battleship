@@ -1,5 +1,4 @@
 .popup {
-  width: 200px;
   position: fixed;
   top: 50%;
   left: 50%;
@@ -30,6 +29,18 @@
 
 .popup__body {
   margin-top: 20px;
+}
+
+.popup__blocks {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.popup__block {
+  margin: 10px;
+  min-width: 200px;
+  flex-grow: 1;
 }
 
 .popup__blockname {
