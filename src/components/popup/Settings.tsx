@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { settingsSlice } from "../../store/reducers/settingsSlice";
 import { ShipType } from "../../utils/enums";
 import { SettingsState } from "../../utils/interfaces";
+import { setToLocalStorage } from "../../utils/settings";
 import FormInput from "./FormInput";
 import classes from "./Settings.module.css";
 
@@ -49,6 +50,7 @@ const Settings: FC<SettingsProps> = ({
       maxAttemptsToInit: +event.currentTarget.max_attempts_to_init.value,
     };
 
+    setToLocalStorage(settings);
     dispatch(changeSettings(settings));
 
     handleModalOpenedChange(false);
@@ -138,7 +140,11 @@ const Settings: FC<SettingsProps> = ({
             </div>
           </div>
           <div className={classes.popup__button}>
-            <input className={classes.popup__submit} type="submit" />
+            <input
+              className={classes.popup__submit}
+              type="submit"
+              value="Save"
+            />
           </div>
         </form>
       </div>
